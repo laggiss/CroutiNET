@@ -3,7 +3,7 @@ from keras.applications import VGG19
 from keras.layers import concatenate, Conv2D, Dropout, Flatten, Dense
 from keras.optimizers import SGD
 
-IMG_SIZE = 150
+IMG_SIZE = 224
 
 
 def con_model():
