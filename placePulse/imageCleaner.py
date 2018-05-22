@@ -2,7 +2,7 @@ from PIL import Image
 import os
 import csv
 
-baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/"
+baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/data"
 
 wealthyDir = os.path.join(baseDir,"votesWealthy.csv")
 correctWealthyDir = os.path.join(baseDir,"votesCorrectWealthy.csv")
@@ -49,12 +49,12 @@ with open(wealthyDir, 'r') as csvfileReader:
 
 
 
-with open(wealthyDir, 'w') as csvfileWriter:
+with open(correctWealthyDir, 'w') as csvfileWriter:
     writer = csv.writer(csvfileWriter, delimiter=',')
-    for row in correctLines:
-        writer.writerow(row)
+    for i in range(len(correctLines)):
+        writer.writerow(correctLines[i])
 
 
-for i in range(len(correctLines)):
-    copyImage(correctLines[i][0] + '.jpg')
-    copyImage(correctLines[i][1] + '.jpg')
+#for i in range(len(correctLines)):
+#    copyImage(correctLines[i][0] + '.jpg')
+#    copyImage(correctLines[i][1] + '.jpg')

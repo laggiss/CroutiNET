@@ -1,7 +1,7 @@
 import csv
 import  os
 
-baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/"
+baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/data"
 datasetDir = os.path.join(baseDir,"votes.csv")
 wealthyDir = os.path.join(baseDir,"votesWealthy.csv")
 
