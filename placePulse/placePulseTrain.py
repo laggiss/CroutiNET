@@ -3,6 +3,9 @@ from PIL import Image
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+from keras import optimizers
+from keras.callbacks import ModelCheckpoint
+from keras.models import load_model
 from keras.optimizers import SGD
 
 from model2 import converge_model
@@ -52,10 +55,11 @@ def load(path):
     rightImages = np.array(rightImages)
     labels = np.array(labels)
 
-    leftImages.astype('float32') / 255
-    rightImages.astype('float32') / 255
+    leftImages = leftImages.astype('float32') / 255
+    rightImages = rightImages.astype('float32') / 255
 
     return (leftImages, rightImages, labels)
+
 
 trainLeft, trainRight, trainLabels = load(trainDir)
 validationLeft, validationRight, validationLabels = load(validationDir)
@@ -63,10 +67,13 @@ testLeft, testRight, testLabels = load(testDir)
 
 model = converge_model()
 sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
+
 model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-history = model.fit([trainLeft,trainRight], trainLabels, epochs=20, batch_size=64, validation_data=([validationLeft,validationRight],validationLabels))
-
+checkpointer = ModelCheckpoint(filepath=os.path.join(baseDir, 'placePulseSecond.h5'), verbose=1, save_best_only=True)
+history = model.fit([trainLeft,trainRight], trainLabels, epochs=50, batch_size=64, validation_data=([validationLeft,validationRight],validationLabels), callbacks=[checkpointer])
 show(history)
 
-model.save(os.path.join(baseDir, 'placePulseFirstTry.h5'))
+# bestModel = load_model(os.path.join(baseDir, 'placePulseSecond.h5'))
+# result = bestModel.evaluate([testLeft, testRight], testLabels)
+# print(result)

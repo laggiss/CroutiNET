@@ -1,6 +1,6 @@
 from keras import Input, Model, Sequential
 from keras.applications import VGG19
-from keras.layers import concatenate, Conv2D, Dropout, Flatten, Dense
+from keras.layers import concatenate, Conv2D, Dropout, Flatten, Dense, BatchNormalization
 from keras.optimizers import SGD
 
 IMG_SIZE = 224
@@ -43,11 +43,11 @@ def converge_model():
     m = Sequential()
     m.add(con_model())
     m.add(Conv2D(512, (3, 3), activation='relu', padding='same', name="block_converge_2"))  # ,input_shape=(IMG_SIZE, IMG_SIZE, 3)))
-    m.add(Dropout(0.3))
+    m.add(Dropout(0.2))
     m.add(Conv2D(512, (3, 3), activation='relu', padding='same', name="block_converge_3"))
     m.add(Dropout(0.3))
     m.add(Conv2D(512, (3, 3), activation='relu', padding='same', name="block_converge_4"))
-    m.add(Dropout(0.5))
+    m.add(BatchNormalization())
     m.add(Flatten())
     m.add(Dense(1, activation='sigmoid', name="block_converge_5k"))
 
