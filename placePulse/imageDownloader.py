@@ -7,7 +7,7 @@ from scipy import misc
 baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/"
 wealthyDir = os.path.join(baseDir,"votesWealthy.csv")
 imgDir = os.path.join(baseDir,"img")
-API_KEY = "AIzaSyCtTQwXfOzlQ8o8VyfZLPP94u8bNzYhEvs"
+API_KEY = "your_api_key"
 lats = []
 longs = []
 ids = []
