@@ -10,7 +10,7 @@ testDir = os.path.join(baseDir,"test/test.csv")
 
 lines = []
 
-encode_dictionnary = { 'left':0, 'right':1, 'equal':0.5}
+encode_dictionnary = { 'left':0, 'right':1}
 
 def write(path, data):
     with open(path, 'w') as csvfileWriter:
@@ -22,7 +22,7 @@ def write(path, data):
 with open(correctWealthyDir, 'r') as csvfileReader:
     reader = csv.reader(csvfileReader, delimiter=',')
     for row in reader:
-        if row != []:
+        if row != [] and row[2] != 'equal':
             lines.append([row[0],row[1],row[2]])
 
 for line in lines:
