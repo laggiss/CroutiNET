@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 import os
 import csv
+from keras.applications.vgg19 import preprocess_input
 import matplotlib.pyplot as plt
 
 baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/data"
@@ -35,7 +36,13 @@ def load(path):
     rightImages = np.array(rightImages)
     labels = np.array(labels)
 
-    leftImages = leftImages.astype('float32') / 255
-    rightImages = rightImages.astype('float32') / 255
+    print(type(leftImages[0,0]))
+    print(leftImages)
+
+    leftImages = preprocess_input(x=np.expand_dims(leftImages.astype(float), axis=0))[0]
+    rightImages = preprocess_input(x=np.expand_dims(rightImages.astype(float), axis=0))[0]
+
+    leftImages = leftImages.astype('float32')# / 255
+    rightImages = rightImages.astype('float32')# / 255
 
     return (leftImages, rightImages, labels)

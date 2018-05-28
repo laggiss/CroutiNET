@@ -1,7 +1,7 @@
 import csv
 import  os
 import streetview
-from sawada import api_download2
+from download.sawada import api_download2
 from scipy import misc
 
 baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/"
