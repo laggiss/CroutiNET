@@ -1,4 +1,4 @@
-from keras import Input, Model, Sequential
+from keras import Input, Model, Sequential, optimizers
 from keras.applications import VGG19
 from keras.layers import concatenate, Conv2D, Dropout, Flatten, Dense, BatchNormalization
 from keras.optimizers import SGD
@@ -49,10 +49,9 @@ def converge_model():
     m.add(Conv2D(512, (3, 3), activation='relu', padding='same', name="block_converge_4"))
     m.add(BatchNormalization())
     m.add(Flatten())
-    m.add(Dense(1, activation='sigmoid', name="block_converge_5k"))
+    m.add(Dense(2, activation='softmax', name="block_converge_5k"))
+    #sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
+    sgd = SGD(lr=1e-6, decay=1e-6, momentum=0.5, nesterov=True)
+    m.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
     return m
-
-model = converge_model()
-sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])

@@ -1,7 +1,10 @@
 from random import randint
 from PIL import Image
+from keras import optimizers
 from keras.callbacks import ModelCheckpoint
+from keras.models import load_model
 from keras.optimizers import SGD
+from keras.utils import to_categorical
 
 from model2 import converge_model
 from loader import load
@@ -13,13 +16,13 @@ import matplotlib.pyplot as plt
 
 IMG_SIZE = 224
 
-baseDir = "C:/Users/msawada/Desktop/arnaud/croutinet/placePulse/data"
+baseDir = r"D:\Arnaud\data_croutinet\placePulse\data"
 
 trainDir = os.path.join(baseDir, "train/train.csv")
 validationDir = os.path.join(baseDir, "validation/validation.csv")
 testDir = os.path.join(baseDir, "test/test.csv")
 correctImgDir = os.path.join(baseDir, "correctImg")
-check_point_weights = os.path.join(baseDir, 'modelWithDataAugmentation.h5')
+check_point_weights = os.path.join(baseDir, 'modelWithDataAugmentation2.h5')
 histories = []
 
 
@@ -85,21 +88,21 @@ no = duelsDF[mask_no]
 model = converge_model()
 #sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
 
-model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+#model.compile(loss='binary_crossentropy', optimizer=optimizers.RMSprop(lr=0.001), metrics=['accuracy'])
 
 validationLeft, validationRight, validationLabels = load(validationDir)
 
 checkpointer = ModelCheckpoint(filepath=check_point_weights, verbose=1, save_best_only=True)
 
 # For batch training, the number of iterations of training model
-n_iter = 10
+n_iter = 20
 for iteration in range(n_iter):
     print(iteration / n_iter)
 
     # sample positive and negative cases for current iteration. It is faster to use fit on batch of n yesno and augment
     # that batch using datagen_class_aug_test than to use fit_generator with the datagen_class_aug_test and small batch
     # sizes.
-    yesno = yes.sample(1500).append(no.sample(1500))
+    yesno = yes.sample(1000).append(no.sample(1000))
     print('yesno created')
     labels = dict(zip([str(x) for x in yesno.index.tolist()],
                       [1 if x == '1' else 0 for x in yesno.winner.tolist()]))
@@ -137,12 +140,13 @@ for iteration in range(n_iter):
     X = np.array(X)
     #X = X/255
 
-    print('X created')
+    print('X as arrray created')
     # Fitting the model. Here you can see how the call to model fit works.  Note the validation data comes from
     # preloaded numpy arrays.
 
+    print('one hot encoding ...')
+    y = to_categorical(y)
 
-    print('checkpointer created')
     #if iteration != 0:
     #    model.load_weights(check_point_weights)
 
@@ -156,3 +160,8 @@ for iteration in range(n_iter):
     histories.append(history)
 
 show(histories)
+
+testLeft, testRight, testLabels = load(testDir)
+bestModel = load_model(check_point_weights)
+result = bestModel.evaluate([testLeft, testRight], testLabels)
+print(result)
