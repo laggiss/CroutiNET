@@ -11,11 +11,12 @@ def smooth_curve(points, factor=0.8):
     return smoothed_points
 
 
-def show(listHistory):
+def show(listHistory, smooth):
     acc = []
     val_acc = []
     loss = []
     val_loss = []
+
 
     for i in range(len(listHistory)):
         acc.extend(listHistory[i].history['acc'])
@@ -28,15 +29,21 @@ def show(listHistory):
 
     plt.subplot(2, 1, 1)
     plt.plot(epochs, acc, 'bo', label='Training acc')
-    plt.plot(epochs, smooth_curve(val_acc), 'r', label='Validation acc')
+    if smooth:
+        plt.plot(epochs, smooth_curve(val_acc), 'r', label='Validation acc')
+    else :
+        plt.plot(epochs, val_acc, 'r', label='Validation acc')
     plt.title('Training accuracy and Validation accuracy')
     plt.legend()
 
 
     plt.subplot(2, 1, 2)
     plt.plot(epochs, loss, 'bo', label='Training loss')
-    plt.plot(epochs, smooth_curve(val_loss), 'r', label='Validation loss')
-    plt.title('Validation loss and Training loss')
+    if smooth:
+        plt.plot(epochs, smooth_curve(val_loss), 'r', label='Validation loss')
+    else:
+        plt.plot(epochs, val_loss, 'r', label='Validation loss')
+        plt.title('Validation loss and Training loss')
     plt.legend()
     plt.show()
 
