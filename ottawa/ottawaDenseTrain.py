@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 import os
 from representation.representation import show
+from model3 import converge_model
 
 IMG_SIZE = 224
 
@@ -22,8 +23,7 @@ trainDir = os.path.join(baseDir, "train/train.csv")
 validationDir = os.path.join(baseDir, "validation/validation.csv")
 testDir = os.path.join(baseDir, "test/test.csv")
 roads_loubna_dir = os.path.join(baseDir, "roads_loubna")
-check_point_model = os.path.join(baseDir, 'modelWithDataAugmentation5.h5')
-bestModel = os.path.join(baseDir, 'modelWithDataAugmentation4.h5')
+check_point_model = os.path.join(baseDir, 'modelWithDataAugmentationDense.h5')
 histories = []
 
 
@@ -40,16 +40,14 @@ yes = duelsDF[mask_yes]
 mask_no = duelsDF['winner'] == '0'
 no = duelsDF[mask_no]
 
-model = load_model(bestModel)
-sgd = SGD(lr=1e-6, decay=1e-4, momentum=0.8437858241496619, nesterov=True)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+model = converge_model()
 
 validationLeft, validationRight, validationLabels = load(validationDir)
 
 checkpointer = ModelCheckpoint(filepath=check_point_model, verbose=1, save_best_only=True)
 
 # For batch training, the number of iterations of training model
-n_iter = 200
+n_iter = 10
 for iteration in range(n_iter):
     print(iteration / n_iter)
 
@@ -84,7 +82,7 @@ for iteration in range(n_iter):
     }
     print('datagenargs created')
 
-    training_generator = d.myDataGeneratorAug(**params).generate(labels, partition['train'], seed=randint(1, 10000),
+    training_generator = d.myDataGeneratorAug(**params).generate(labels, partition['train'], seed=1337,
                                                                  datagenargs=datagenargs)
     print('training generator created')
 
@@ -108,7 +106,7 @@ for iteration in range(n_iter):
         [X[0], X[1]],
         y,
         batch_size=16,
-        epochs=10,
+        epochs=30,
         validation_data=([validationLeft, validationRight], validationLabels),
         callbacks=[checkpointer])
     histories.append(history)

@@ -27,6 +27,30 @@ def loadImage(name):
     x = keras_image.img_to_array(img)
     return  x
 
+def loadAsScalars(path):
+    leftImages = []
+    rightImages = []
+    labels = []
+    with open(path, 'r') as csvfileReader:
+        reader = csv.reader(csvfileReader, delimiter=',')
+        for line in reader:
+            if line != [] and line[2] != '0.5':
+                leftImages.append(loadImage(line[0]))
+                rightImages.append(loadImage(line[1]))
+                labels.append(int(line[2]))
+
+    leftImages = np.array(leftImages)
+    rightImages = np.array(rightImages)
+    labels = np.array(labels)
+
+    leftImages = preprocess_input(x=np.expand_dims(leftImages.astype(float), axis=0))[0]
+    rightImages = preprocess_input(x=np.expand_dims(rightImages.astype(float), axis=0))[0]
+
+    leftImages = leftImages.astype('float32')# / 255
+    rightImages = rightImages.astype('float32')# / 255
+
+    return (leftImages, rightImages, labels)
+
 
 def load(path):
     leftImages = []
@@ -44,16 +68,6 @@ def load(path):
     rightImages = np.array(rightImages)
     labels = np.array(labels)
 
-    #print(type(leftImages[0,0]))
-    #print(leftImages)
-    print(np.shape(leftImages))
-    print(np.shape(rightImages))
-
-    # for i in range(len(leftImages)):
-    #     leftImages[i] = misc.imresize(leftImages[i], (IMG_SIZE, IMG_SIZE))
-    #
-    # for i in range(len(rightImages)):
-    #     rightImages[i] = misc.imresize(rightImages[i], (IMG_SIZE, IMG_SIZE))
 
     leftImages = preprocess_input(x=np.expand_dims(leftImages.astype(float), axis=0))[0]
     rightImages = preprocess_input(x=np.expand_dims(rightImages.astype(float), axis=0))[0]
