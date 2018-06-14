@@ -20,7 +20,7 @@ from osgeo import ogr
 import random
 import pandas as pan
 
-API_KEY = 'AIzaSyC_cKyaxPoDPTtN4IgiOJ_e_9ytbMDk4lE'
+API_KEY = ""
 
 
 # ------------------------------------------------------------------------------
